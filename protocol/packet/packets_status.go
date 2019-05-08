@@ -5,10 +5,13 @@ import (
 	"justanother.org/protocolhelper/protocol/codecs"
 )
 
+// StatusRequest represents a packet
 type StatusRequest struct{}
 
-func (_ StatusRequest) ID() int { return 0x00 }
+// ID returns the packet ID
+func (p StatusRequest) ID() int { return 0x00 }
 
+// StatusResponse represents a packet
 type StatusResponse struct {
 	Status struct {
 		Version struct {
@@ -25,16 +28,21 @@ type StatusResponse struct {
 	}
 }
 
-func (_ StatusResponse) ID() int { return 0x00 }
+// ID returns the packet ID
+func (p StatusResponse) ID() int { return 0x00 }
 
+// StatusPing represents a packet
 type StatusPing struct {
 	Payload codecs.Long
 }
 
-func (_ StatusPing) ID() int { return 0x01 }
+// ID returns the packet ID
+func (p StatusPing) ID() int { return 0x01 }
 
+// StatusPong represents a packet
 type StatusPong struct {
 	Payload codecs.Long
 }
 
-func (_ StatusPong) ID() int { return 0x01 }
+// ID returns the packet ID
+func (p StatusPong) ID() int { return 0x01 }

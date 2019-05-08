@@ -5,21 +5,29 @@ import (
 	"justanother.org/protocolhelper/protocol/codecs"
 )
 
+// PlayKeepAlive represents a packet
 type PlayKeepAlive struct {
-	AliveId codecs.VarInt
+	AliveID codecs.VarInt
 }
 
-func (_ PlayKeepAlive) ID() int { return 0x1F }
+// ID returns the packet ID
+func (p PlayKeepAlive) ID() int { return 0x1F }
 
+// PlayChatMessage represents a packet
+// TODO: Verify that chat.TextComponent is being read correctly.
+//  Even though we don't plan on using these types, we will want
+//  to have a good example.
 type PlayChatMessage struct {
 	Chat     chat.TextComponent
 	Position codecs.Byte
 }
 
-func (_ PlayChatMessage) ID() int { return 0x0F }
+// ID returns the packet ID
+func (p PlayChatMessage) ID() int { return 0x0F }
 
+// PlayJoinGame represents a packet
 type PlayJoinGame struct {
-	EntityId   codecs.Int
+	EntityID   codecs.Int
 	Gamemode   codecs.UnsignedByte
 	Dimension  codecs.Int
 	Difficulty codecs.UnsignedByte
@@ -28,14 +36,18 @@ type PlayJoinGame struct {
 	Debug      codecs.Boolean
 }
 
-func (_ PlayJoinGame) ID() int { return 0x23 }
+// ID returns the packet ID
+func (p PlayJoinGame) ID() int { return 0x23 }
 
+// PlaySpawnPosition represents a packet
 type PlaySpawnPosition struct {
 	Location codecs.Long
 }
 
-func (_ PlaySpawnPosition) ID() int { return 0x43 }
+// ID returns the packet ID
+func (p PlaySpawnPosition) ID() int { return 0x43 }
 
+// PlayPositionAndLook represents a packet
 type PlayPositionAndLook struct {
 	X     codecs.Double
 	Y     codecs.Double
@@ -46,4 +58,5 @@ type PlayPositionAndLook struct {
 	Data  codecs.VarInt
 }
 
-func (_ PlayPositionAndLook) ID() int { return 0x2E }
+// ID returns the packet ID
+func (p PlayPositionAndLook) ID() int { return 0x2E }
