@@ -11,6 +11,7 @@ import (
 	"justanother.org/protocolhelper/util"
 )
 
+// Connection helps manage the state, the protocolID, and the connection.
 type Connection struct {
 	rw io.ReadWriteCloser
 

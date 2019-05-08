@@ -9,7 +9,8 @@ import (
 var (
 	Version = ""
 
-	usedRegistry     *Registry
+	usedRegistry *Registry
+	// TODO We might not need the mutex, because we only really need to initiate the registry at the start, and not anywhere inbetween.
 	usedRegistryLock = &sync.Mutex{}
 )
 
