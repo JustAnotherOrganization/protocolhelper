@@ -1,24 +1,27 @@
 package protocol
 
 import (
+	"bytes"
 	"io"
 	"net"
-	"bytes"
 	"reflect"
-	"github.com/justblender/gominet/util"
-	"github.com/justblender/gominet/protocol/packet"
-	"github.com/justblender/gominet/protocol/codecs"
+
+	"justanother.org/protocolhelper/protocol/codecs"
+	"justanother.org/protocolhelper/protocol/packet"
+	"justanother.org/protocolhelper/util"
 )
 
 type Connection struct {
-	rw  		io.ReadWriteCloser
+	rw io.ReadWriteCloser
 
-	State 		State
-	Protocol 	uint16
+	State    State
+	Protocol uint16
 }
 
+// State is the gameplay state.
 type State uint8
 
+// Different gameplay states.
 const (
 	Handshake State = iota
 	Status
@@ -26,10 +29,12 @@ const (
 	Play
 )
 
+// NewConnection will wrap the net.Conn in a Connection struct
 func NewConnection(conn net.Conn) *Connection {
 	return &Connection{rw: conn}
 }
 
+// Next will read the next packet.
 func (c *Connection) Next() (packet.Holder, error) {
 	p, err := c.read()
 	if err != nil {
@@ -39,6 +44,7 @@ func (c *Connection) Next() (packet.Holder, error) {
 	return c.decode(p)
 }
 
+// Write will write the packet h to the connection
 func (c *Connection) Write(h packet.Holder) (int, error) {
 	data, err := c.encode(h)
 	if err != nil {
@@ -58,6 +64,7 @@ func (c *Connection) Write(h packet.Holder) (int, error) {
 	return int(n), nil
 }
 
+// Close will attempt to close the connection
 func (c *Connection) Close() error {
 	if closer, ok := c.rw.(io.Closer); ok {
 		return closer.Close()
@@ -73,7 +80,7 @@ func (c *Connection) read() (*Packet, error) {
 	}
 
 	if length < 0 || length > 1048576 { // 2^(21-1)
-		return nil, InvalidPacketLength
+		return nil, ErrInvalidPacketLength
 	}
 
 	payload := make([]byte, length)
@@ -98,12 +105,13 @@ func (c *Connection) read() (*Packet, error) {
 }
 
 func (c *Connection) decode(p *Packet) (packet.Holder, error) {
-	holder, ok := packets[p.Direction][c.State][p.ID]
-	if !ok {
-		return nil, UnknownPacketType
+
+	packetType, err := GetPacketType(p.Direction, c.State, p.ID)
+	if err != nil {
+		return nil, err
 	}
 
-	inst := reflect.New(holder).Elem()
+	inst := reflect.New(packetType).Elem()
 
 	for i := 0; i < inst.NumField(); i++ {
 		field := inst.Field(i)

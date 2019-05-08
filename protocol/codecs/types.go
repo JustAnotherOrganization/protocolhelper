@@ -1,10 +1,11 @@
 package codecs
 
 import (
-	"io"
-	"errors"
 	"encoding/json"
-	"github.com/justblender/gominet/util"
+	"errors"
+	"io"
+
+	"justanother.org/protocolhelper/util"
 )
 
 type String string

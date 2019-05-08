@@ -1,22 +1,23 @@
 package gominet
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net"
-	"errors"
-	"github.com/justblender/gominet/protocol"
-	"github.com/justblender/gominet/protocol/packet"
+
+	"justanother.org/protocolhelper/protocol"
+	"justanother.org/protocolhelper/protocol/packet"
 )
 
 var NoHandlerException = errors.New("No packet handler has been specified")
 
 type Server struct {
-	host 		string
-	port 		int
+	host string
+	port int
 
-	listener	net.Listener
-	handler	 	Handler
+	listener net.Listener
+	handler  Handler
 }
 
 type Handler func(*protocol.Connection, packet.Holder) error
@@ -57,7 +58,7 @@ func (server *Server) handleConnection(conn *protocol.Connection) {
 	for {
 		holder, err := conn.Next()
 		if err != nil {
-			if err == protocol.UnknownPacketType {
+			if err == protocol.ErrUnknownPacketType {
 				continue
 			}
 

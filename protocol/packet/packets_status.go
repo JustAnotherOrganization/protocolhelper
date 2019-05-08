@@ -1,8 +1,8 @@
 package packet
 
 import (
-	"github.com/justblender/gominet/chat"
-	"github.com/justblender/gominet/protocol/codecs"
+	"justanother.org/protocolhelper/chat"
+	"justanother.org/protocolhelper/protocol/codecs"
 )
 
 type StatusRequest struct{}
@@ -28,13 +28,13 @@ type StatusResponse struct {
 func (_ StatusResponse) ID() int { return 0x00 }
 
 type StatusPing struct {
-	Payload 	codecs.Long
+	Payload codecs.Long
 }
 
 func (_ StatusPing) ID() int { return 0x01 }
 
 type StatusPong struct {
-	Payload 	codecs.Long
+	Payload codecs.Long
 }
 
 func (_ StatusPong) ID() int { return 0x01 }

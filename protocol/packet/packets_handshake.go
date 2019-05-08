@@ -1,6 +1,6 @@
 package packet
 
-import "github.com/justblender/gominet/protocol/codecs"
+import "justanother.org/protocolhelper/protocol/codecs"
 
 type Handshake struct {
 	ProtocolVersion codecs.VarInt
