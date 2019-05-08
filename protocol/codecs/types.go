@@ -2,7 +2,6 @@ package codecs
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 
 	"justanother.org/protocolhelper/util"
@@ -23,8 +22,16 @@ type JSON struct {
 	V interface{}
 }
 
-func (_ JSON) Decode(r io.Reader) (interface{}, error) {
-	return nil, errors.New("not yet implemented")
+func (j JSON) Decode(r io.Reader) (interface{}, error) {
+	s, err := util.ReadString(r)
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal([]byte(s), &j.V); err != nil {
+		return nil, err
+	}
+
+	return j.V, err
 }
 
 func (j JSON) Encode(w io.Writer) error {
