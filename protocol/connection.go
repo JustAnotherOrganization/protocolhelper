@@ -106,7 +106,6 @@ func (c *Connection) read() (*Packet, error) {
 }
 
 func (c *Connection) decode(p *Packet) (packet.Holder, error) {
-
 	packetType, err := GetPacketType(p.Direction, c.State, p.ID)
 	if err != nil {
 		return nil, err
